@@ -2,6 +2,7 @@ package com.hanjinliang.dibao.module.main;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.CoordinatorLayout;
@@ -23,10 +24,14 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.hanjinliang.dibao.R;
 import com.hanjinliang.dibao.module.base.BaseActivity;
 import com.hanjinliang.dibao.module.base.BaseListFragment;
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.config.PictureMimeType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,11 +41,11 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.drawer_layout)
-    DrawerLayout drawer ;
+    DrawerLayout drawer;
     @BindView(R.id.nav_view)
     NavigationView navigationView;
 
@@ -50,8 +55,8 @@ public class MainActivity extends BaseActivity
     @BindView(R.id.mainViewPager)
     ViewPager mainViewPager;
 
-    ArrayList<Fragment> mFragmentArrayList=new ArrayList<>();
-    List<String> mFragmentTitleList= Arrays.asList("照片","视频","备忘录","账本");
+    ArrayList<Fragment> mFragmentArrayList = new ArrayList<>();
+    List<String> mFragmentTitleList = Arrays.asList("照片", "视频", "备忘录", "账本");
 
     @Override
     public int getContentViewId() {
@@ -72,8 +77,8 @@ public class MainActivity extends BaseActivity
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        for(int i=0;i<mFragmentTitleList.size();i++){
-            mFragmentArrayList.add(BaseListFragment.newInstance(i+1));
+        for (int i = 0; i < mFragmentTitleList.size(); i++) {
+            mFragmentArrayList.add(BaseListFragment.newInstance(i + 1));
         }
 
         mainViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
@@ -97,7 +102,7 @@ public class MainActivity extends BaseActivity
     }
 
     @OnClick({R.id.fab})
-    public void onClick(View view){
+    public void onClick(View view) {
         openBottom();
     }
 
@@ -106,7 +111,7 @@ public class MainActivity extends BaseActivity
         LinearLayout contentView = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.dialog_main_add, null);
 
         final BottomSheetDialog dialog = new BottomSheetDialog(this);
-        dialog.setContentView(contentView,new ViewGroup.LayoutParams(ScreenUtils.getScreenWidth(), ScreenUtils.getScreenHeight()));
+        dialog.setContentView(contentView, new ViewGroup.LayoutParams(ScreenUtils.getScreenWidth(), ScreenUtils.getScreenHeight()));
         View parent = (View) contentView.getParent();
         parent.setBackgroundColor(Color.parseColor("#55000000"));
         BottomSheetBehavior behavior = BottomSheetBehavior.from(parent);
@@ -124,6 +129,36 @@ public class MainActivity extends BaseActivity
                 return false;
             }
         });
+        AddClickListener addClickListener = new AddClickListener();
+        contentView.findViewById(R.id.main_add_pic).setOnClickListener(addClickListener);
+        contentView.findViewById(R.id.main_add_video).setOnClickListener(addClickListener);
+    }
+
+    class AddClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.main_add_pic://选择照片
+                    PictureSelector.create(MainActivity.this)
+                            .openGallery(PictureMimeType.ofImage())//全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
+                            .theme(R.style.picture_white_style)
+                            .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
+                    break;
+                case R.id.main_add_video://选择视频
+                    PictureSelector.create(MainActivity.this)
+                            .openGallery(PictureMimeType.ofVideo())//全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
+                            .theme(R.style.picture_white_style)
+                            .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        PermissionUtils.onRequestPermissionsResult(this,requestCode, permissions, grantResults);
     }
 
     @Override

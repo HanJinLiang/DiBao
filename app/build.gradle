@@ -17,8 +17,11 @@ android {
         }
     }
 
-    //兼容Android6.0系统所需，如果这句话报错，可在dependencies标签下使用compile 'cn.bmob.android:http-legacy:1.0'**
-    useLibrary 'org.apache.http.legacy'
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'  //这里找到你自己错的那行，把Duplicate files copied in APK后面的复制上来
+    }
+
+
 }
 
 dependencies {
@@ -48,4 +51,14 @@ dependencies {
 
     //https://github.com/scwang90/SmartRefreshLayout
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.4-6'
+
+    //https://github.com/qyxxjd/MultipleStatusView
+    implementation 'com.classic.common:multiple-status-view:1.4'
+
+    //https://github.com/81813780/AVLoadingIndicatorView
+    implementation 'com.wang.avi:library:2.1.3'
+
+    //https://github.com/LuckSiege/PictureSelector
+    implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.1.7'
+
 }
