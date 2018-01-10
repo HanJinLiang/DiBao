@@ -10,6 +10,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -27,20 +28,19 @@ import android.widget.LinearLayout;
 import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.hanjinliang.dibao.R;
-import com.hanjinliang.dibao.module.base.BaseActivity;
 import com.hanjinliang.dibao.module.base.BaseListFragment;
-import com.luck.picture.lib.PictureSelector;
-import com.luck.picture.lib.config.PictureConfig;
-import com.luck.picture.lib.config.PictureMimeType;
+import com.hanjinliang.dibao.module.picture.ui.AddPicActivity;
+import com.hanjinliang.dibao.module.picture.ui.PostFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends BaseActivity
+public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -59,16 +59,11 @@ public class MainActivity extends BaseActivity
     List<String> mFragmentTitleList = Arrays.asList("照片", "视频", "备忘录", "账本");
 
     @Override
-    public int getContentViewId() {
-        return R.layout.activity_main;
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setSupportActionBar(toolbar);
-
-
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -78,7 +73,12 @@ public class MainActivity extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         for (int i = 0; i < mFragmentTitleList.size(); i++) {
-            mFragmentArrayList.add(BaseListFragment.newInstance(i + 1));
+            if(i==0){
+                mFragmentArrayList.add(PostFragment.newInstance(AddPicActivity.TYPE_PIC));
+            }else{
+                mFragmentArrayList.add(BaseListFragment.newInstance(i + 1));
+            }
+
         }
 
         mainViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
@@ -106,7 +106,9 @@ public class MainActivity extends BaseActivity
         openBottom();
     }
 
-
+    /**
+     * 弹出添加对话框
+     */
     private void openBottom() {
         LinearLayout contentView = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.dialog_main_add, null);
 
@@ -140,16 +142,10 @@ public class MainActivity extends BaseActivity
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.main_add_pic://选择照片
-                    PictureSelector.create(MainActivity.this)
-                            .openGallery(PictureMimeType.ofImage())//全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
-                            .theme(R.style.picture_white_style)
-                            .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
+                    AddPicActivity.launchActivity(MainActivity.this,AddPicActivity.TYPE_PIC);
                     break;
                 case R.id.main_add_video://选择视频
-                    PictureSelector.create(MainActivity.this)
-                            .openGallery(PictureMimeType.ofVideo())//全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
-                            .theme(R.style.picture_white_style)
-                            .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
+                    AddPicActivity.launchActivity(MainActivity.this,AddPicActivity.TYPE_VIDEO);
                     break;
             }
         }
@@ -169,28 +165,6 @@ public class MainActivity extends BaseActivity
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

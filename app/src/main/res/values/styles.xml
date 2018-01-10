@@ -45,7 +45,7 @@
         <!--选择图片样式0/9-->
         <item name="picture.style.numComplete">true</item>
         <!--图片列表底部背景色-->
-        <item name="picture.bottom.bg">@color/color_fa</item>
+        <item name="picture.bottom.bg">@color/colorPrimary</item>
         <!--图片列表预览文字颜色-->
         <item name="picture.preview.textColor">@color/tab_color_false</item>
         <!--图片列表已完成文字颜色-->
@@ -57,11 +57,11 @@
         <!--预览界面已完成文字颜色-->
         <item name="picture.ac_preview.complete.textColor">@color/tab_color_false</item>
         <!--预览界面标题栏背景色-->
-        <item name="picture.ac_preview.title.bg">@color/bar_grey</item>
+        <item name="picture.ac_preview.title.bg">@color/colorPrimary</item>
         <!--预览界面底部背景色-->
-        <item name="picture.ac_preview.bottom.bg">@color/bar_grey_90</item>
+        <item name="picture.ac_preview.bottom.bg">@color/colorPrimary</item>
         <!--预览界面状态栏颜色-->
-        <item name="picture.status.color">@color/bar_grey_90</item>
+        <item name="picture.status.color">@color/colorPrimary</item>
         <!--预览界面返回箭头-->
         <item name="picture.preview.leftBack.icon">@drawable/picture_back</item>
         <!--是否改变预览界面状态栏字体颜色为黑色-->
@@ -74,5 +74,28 @@
         <item name="picture.crop.title.color">@color/white</item>
         <!--相册文件夹列表选中图标-->
         <item name="picture.folder_checked_dot">@drawable/orange_oval</item>
+    </style>
+
+
+    <style name="ToolBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="actionMenuTextColor">@color/white</item> <!--颜色-->
+        <item name="android:textSize">16sp</item> <!--字体大小-->
+    </style>
+
+    <style name="TextNormal_pink">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="EditTextNormal_pink">
+        <item name="android:background">@color/white</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:gravity">start</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 </resources>

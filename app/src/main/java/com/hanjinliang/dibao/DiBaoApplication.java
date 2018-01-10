@@ -2,8 +2,12 @@ package com.hanjinliang.dibao;
 
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.widget.ImageView;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.Utils;
+import com.bumptech.glide.Glide;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreater;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreater;
@@ -45,7 +49,6 @@ public class DiBaoApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mApplication=this;
-
         //第一：默认初始化
         Bmob.initialize(this, "1ff8acc277e93b8575f803213e6cb0d6");
 
