@@ -1,4 +1,4 @@
-package com.hanjinliang.dibao.module.picture.adapter;
+package com.hanjinliang.dibao.module.post.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;

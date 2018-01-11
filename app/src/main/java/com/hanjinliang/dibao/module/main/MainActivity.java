@@ -20,7 +20,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -29,8 +28,8 @@ import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.hanjinliang.dibao.R;
 import com.hanjinliang.dibao.module.base.BaseListFragment;
-import com.hanjinliang.dibao.module.picture.ui.AddPicActivity;
-import com.hanjinliang.dibao.module.picture.ui.PostFragment;
+import com.hanjinliang.dibao.module.post.ui.AddPicActivity;
+import com.hanjinliang.dibao.module.post.ui.PostFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,6 +74,8 @@ public class MainActivity extends AppCompatActivity
         for (int i = 0; i < mFragmentTitleList.size(); i++) {
             if(i==0){
                 mFragmentArrayList.add(PostFragment.newInstance(AddPicActivity.TYPE_PIC));
+            }else if(i==1){
+                mFragmentArrayList.add(PostFragment.newInstance(AddPicActivity.TYPE_VIDEO));
             }else{
                 mFragmentArrayList.add(BaseListFragment.newInstance(i + 1));
             }
@@ -105,15 +106,15 @@ public class MainActivity extends AppCompatActivity
     public void onClick(View view) {
         openBottom();
     }
-
+    BottomSheetDialog mBottomSheetDialog;
     /**
      * 弹出添加对话框
      */
     private void openBottom() {
         LinearLayout contentView = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.dialog_main_add, null);
 
-        final BottomSheetDialog dialog = new BottomSheetDialog(this);
-        dialog.setContentView(contentView, new ViewGroup.LayoutParams(ScreenUtils.getScreenWidth(), ScreenUtils.getScreenHeight()));
+        mBottomSheetDialog= new BottomSheetDialog(this);
+        mBottomSheetDialog.setContentView(contentView, new ViewGroup.LayoutParams(ScreenUtils.getScreenWidth(), ScreenUtils.getScreenHeight()));
         View parent = (View) contentView.getParent();
         parent.setBackgroundColor(Color.parseColor("#55000000"));
         BottomSheetBehavior behavior = BottomSheetBehavior.from(parent);
@@ -122,12 +123,12 @@ public class MainActivity extends AppCompatActivity
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) parent.getLayoutParams();
         params.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
         parent.setLayoutParams(params);
-        dialog.show();
+        mBottomSheetDialog.show();
 
         contentView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                dialog.dismiss();
+                mBottomSheetDialog.dismiss();
                 return false;
             }
         });
@@ -148,6 +149,7 @@ public class MainActivity extends AppCompatActivity
                     AddPicActivity.launchActivity(MainActivity.this,AddPicActivity.TYPE_VIDEO);
                     break;
             }
+            mBottomSheetDialog.dismiss();
         }
     }
 

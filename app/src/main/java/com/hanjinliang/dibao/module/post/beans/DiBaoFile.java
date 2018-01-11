@@ -1,4 +1,4 @@
-package com.hanjinliang.dibao.module.picture.beans;
+package com.hanjinliang.dibao.module.post.beans;
 
 import com.hanjinliang.dibao.module.base.BaseBeans;
 

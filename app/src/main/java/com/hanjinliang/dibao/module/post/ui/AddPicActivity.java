@@ -1,8 +1,7 @@
-package com.hanjinliang.dibao.module.picture.ui;
+package com.hanjinliang.dibao.module.post.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Movie;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,20 +10,20 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.blankj.utilcode.util.FileUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.hanjinliang.dibao.R;
 import com.hanjinliang.dibao.module.base.BaseActivity;
-import com.hanjinliang.dibao.module.picture.adapter.FullyGridLayoutManager;
-import com.hanjinliang.dibao.module.picture.adapter.GridImageAdapter;
-import com.hanjinliang.dibao.module.picture.beans.DiBaoFile;
-import com.hanjinliang.dibao.module.picture.beans.DiBaoPost;
+import com.hanjinliang.dibao.module.post.adapter.FullyGridLayoutManager;
+import com.hanjinliang.dibao.module.post.adapter.GridImageAdapter;
+import com.hanjinliang.dibao.module.post.beans.DiBaoFile;
+import com.hanjinliang.dibao.module.post.beans.DiBaoPost;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,7 +96,9 @@ public class AddPicActivity extends BaseActivity {
         final String[] filePaths=new String[selectList.size()];
         for(int i=0;i<filePaths.length;i++){
             filePaths[i]=selectList.get(i).getPath();
+            LogUtils.e(FileUtils.getFileSize(selectList.get(i).getPath()));
         }
+        showProgressDialog();
         BmobFile.uploadBatch(filePaths, new UploadBatchListener() {
             @Override
             public void onSuccess(List<BmobFile> list, List<String> urls) {
@@ -105,7 +106,7 @@ public class AddPicActivity extends BaseActivity {
                 //2、urls-上传文件的完整url地址
                 if(urls.size()==filePaths.length){//如果数量相等，则代表文件全部上传完成
                     //do something
-                    ToastUtils.showLong("上传成功");
+                   LogUtils.e("文件上传成功");
                     final List<BmobObject> files=new ArrayList<>();
                     for(int i=0;i<list.size();i++){
                         final DiBaoFile diBaoFile=new DiBaoFile("",list.get(i),mType);
@@ -117,11 +118,13 @@ public class AddPicActivity extends BaseActivity {
             }
 
             @Override
-            public void onProgress(int i, int i1, int i2, int i3) {
+            public void onProgress(int i, int i1, int i2, int totalPercent) {
                 //1、curIndex--表示当前第几个文件正在上传
                 //2、curPercent--表示当前上传文件的进度值（百分比）
                 //3、total--表示总的上传文件数
                 //4、totalPercent--表示总的上传进度（百分比）
+                LogUtils.e(totalPercent);
+                updateProgressDialog(totalPercent);
             }
 
             @Override
@@ -153,7 +156,8 @@ public class AddPicActivity extends BaseActivity {
                             LogUtils.e("第"+i+"个数据批量添加失败："+ex.getMessage()+","+ex.getErrorCode());
                         }
                     }
-
+                    ToastUtils.showShort("发布成功");
+                    finish();
                 }else{
                     Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
                 }
@@ -222,6 +226,8 @@ public class AddPicActivity extends BaseActivity {
         PictureSelector.create(AddPicActivity.this)
                 .openGallery(mimeType)//全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
                 .theme(R.style.picture_white_style)
+                .compress(true)
+                .videoQuality(0)// 视频录制质量 0 or 1
                 .selectionMedia(selectList)// 是否传入已选图片
                 .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
     }

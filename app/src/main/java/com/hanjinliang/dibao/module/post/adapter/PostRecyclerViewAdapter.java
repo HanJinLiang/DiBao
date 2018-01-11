@@ -1,18 +1,20 @@
-package com.hanjinliang.dibao.module.picture.adapter;
+package com.hanjinliang.dibao.module.post.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.hanjinliang.dibao.R;
-import com.hanjinliang.dibao.module.picture.beans.DiBaoPost;
+import com.hanjinliang.dibao.module.post.beans.DiBaoFile;
+import com.hanjinliang.dibao.module.post.beans.DiBaoPost;
+import com.hanjinliang.dibao.module.post.ui.AddPicActivity;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  */
@@ -20,9 +22,10 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
 
     private  ArrayList<DiBaoPost> mDiBaoPosts;
     private Context mContext;
-
-    public PostRecyclerViewAdapter(Context context,ArrayList<DiBaoPost> diBaoPosts) {
+    private String mPostType;
+    public PostRecyclerViewAdapter(Context context,String postType,ArrayList<DiBaoPost> diBaoPosts) {
         mContext=context;
+        mPostType=postType;
         mDiBaoPosts = diBaoPosts;
     }
 
@@ -33,16 +36,25 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         return new ViewHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.picRecyclerView.setLayoutManager(new GridLayoutManager(mContext,getColumnsCount(mDiBaoPosts.get(position).getDiBaoFiles().size())));
-        holder.picRecyclerView.setAdapter(new PostPicAdapter(mDiBaoPosts.get(position).getDiBaoFiles()));
+        holder.picRecyclerView.setLayoutManager(new GridLayoutManager(mContext,getColumnsCount(mDiBaoPosts.get(position).getDiBaoFiles())));
+        if(mPostType.equals(AddPicActivity.TYPE_PIC)){
+            holder.picRecyclerView.setAdapter(new PostPicAdapter(mDiBaoPosts.get(position).getDiBaoFiles()));
+        }else{
+            holder.picRecyclerView.setAdapter(new PostVideoAdapter(mDiBaoPosts.get(position).getDiBaoFiles()));
+        }
         holder.postContent.setText(mDiBaoPosts.get(position).getContent());
     }
 
-    private int getColumnsCount(int size) {
+    private int getColumnsCount(List<DiBaoFile> diBaoFiles) {
+        if(mPostType.equals(AddPicActivity.TYPE_VIDEO)||diBaoFiles==null){
+            return 1;//视频只显示一个
+        }
         int columns=3;
-        switch (size){
+        switch (diBaoFiles.size()){
+            case 0:
             case 1:
                 columns=1;
                 break;

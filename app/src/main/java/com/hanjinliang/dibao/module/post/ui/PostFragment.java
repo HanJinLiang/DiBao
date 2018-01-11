@@ -1,10 +1,8 @@
-package com.hanjinliang.dibao.module.picture.ui;
+package com.hanjinliang.dibao.module.post.ui;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,18 +11,16 @@ import android.view.ViewGroup;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.classic.common.MultipleStatusView;
-import com.hanjinliang.dibao.MyItemRecyclerViewAdapter;
 import com.hanjinliang.dibao.R;
-import com.hanjinliang.dibao.module.base.BaseListFragment;
-import com.hanjinliang.dibao.module.picture.adapter.PostRecyclerViewAdapter;
-import com.hanjinliang.dibao.module.picture.beans.DiBaoFile;
-import com.hanjinliang.dibao.module.picture.beans.DiBaoPost;
+import com.hanjinliang.dibao.module.base.LazyLoadFragment;
+import com.hanjinliang.dibao.module.post.adapter.PostRecyclerViewAdapter;
+import com.hanjinliang.dibao.module.post.beans.DiBaoFile;
+import com.hanjinliang.dibao.module.post.beans.DiBaoPost;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
@@ -36,7 +32,7 @@ import cn.bmob.v3.listener.FindListener;
  * Created by HanJinLiang on 2018-01-09.
  */
 
-public class PostFragment extends Fragment {
+public class PostFragment extends LazyLoadFragment {
     private String mType;
 
     public static PostFragment newInstance(String mType) {
@@ -48,6 +44,11 @@ public class PostFragment extends Fragment {
     }
 
     @Override
+    public void fetchData() {
+        refreshLayout.autoRefresh(100);
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args=getArguments();
@@ -56,35 +57,54 @@ public class PostFragment extends Fragment {
         }
     }
     int count=0;
-    private void loadData() {
+    int page=1;
+    private void loadData(final boolean isAdd) {
         LogUtils.e("loadData");
         BmobQuery<DiBaoPost> query = new BmobQuery<DiBaoPost>();
-        query.setLimit(10);
+        query.setLimit(10);//每页条数
+        query.setSkip(isAdd?(10*(page-1)):0);//跳过多少页
+        query.order("-createdAt");
+        query.addWhereEqualTo("postType",mType);
         query.findObjects(new FindListener<DiBaoPost>() {
             @Override
             public void done(final List<DiBaoPost> postlist, BmobException e) {
+                LogUtils.e(postlist.toString());
+                page++;
                 count=0;
-                for(int i=0;i<postlist.size();i++){
-                    final DiBaoPost diBaoPost=postlist.get(i);
-                    BmobQuery<DiBaoFile> queryFile = new BmobQuery<DiBaoFile>();
-                    queryFile.addWhereEqualTo("post",new BmobPointer(diBaoPost));
-                    queryFile.findObjects(new FindListener<DiBaoFile>() {
-                        @Override
-                        public void done(List<DiBaoFile> list, BmobException e) {
-                            diBaoPost.setDiBaoFiles(list);
-                            count++;
-                            if(count==postlist.size() ){
-                                refreshLayout.finishRefresh();//
-                                  LogUtils.e(postlist);
-                                mDiBaoPosts.clear();
-                                mDiBaoPosts.addAll(postlist);
-                                mDiBaoPosts.addAll(postlist);
-                                mDiBaoPosts.addAll(postlist);
-                                LogUtils.e("notifyDataSetChanged");
-                                mPostRecyclerViewAdapter.notifyDataSetChanged();
+                if(postlist.size()==0){//没有数据
+                    if (!isAdd) {//刷新
+                        refreshLayout.finishRefresh();//
+                        page = 2;
+                        mDiBaoPosts.clear();
+                    } else {
+                        refreshLayout.finishLoadmore(true);
+                    }
+                }else {
+                    for (int i = 0; i < postlist.size(); i++) {
+                        final DiBaoPost diBaoPost = postlist.get(i);
+                        BmobQuery<DiBaoFile> queryFile = new BmobQuery<DiBaoFile>();
+                        queryFile.addWhereEqualTo("post", new BmobPointer(diBaoPost));
+                        queryFile.findObjects(new FindListener<DiBaoFile>() {
+                            @Override
+                            public void done(List<DiBaoFile> list, BmobException e) {
+                                diBaoPost.setDiBaoFiles(list);
+                                count++;
+                                if (count == postlist.size()) {
+                                    if (!isAdd) {//刷新
+                                        refreshLayout.finishRefresh();//
+                                        page = 2;
+                                        mDiBaoPosts.clear();
+                                    } else {
+                                        refreshLayout.finishLoadmore(true);
+                                    }
+                                    LogUtils.e(postlist);
+                                    mDiBaoPosts.addAll(postlist);
+                                    LogUtils.e("notifyDataSetChanged");
+                                    mPostRecyclerViewAdapter.notifyDataSetChanged();
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
 
             }
@@ -104,18 +124,18 @@ public class PostFragment extends Fragment {
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                loadData();
+                loadData(false);
             }
         });
         refreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
-                refreshlayout.finishLoadmore(2000/*,false*/);//传入false表示加载失败
+                loadData(true);
             }
         });
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mPostRecyclerViewAdapter=new PostRecyclerViewAdapter(getActivity(),mDiBaoPosts);
+        mPostRecyclerViewAdapter=new PostRecyclerViewAdapter(getActivity(),mType,mDiBaoPosts);
         recyclerView.setAdapter(mPostRecyclerViewAdapter);
         return view;
     }

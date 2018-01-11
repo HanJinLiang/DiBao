@@ -3,6 +3,7 @@ package com.hanjinliang.dibao;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Environment;
 import android.widget.ImageView;
 
 import com.blankj.utilcode.util.LogUtils;
@@ -16,6 +17,8 @@ import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+
+import java.io.File;
 
 import cn.bmob.v3.Bmob;
 
@@ -54,5 +57,7 @@ public class DiBaoApplication extends Application {
 
         // init it in the function of onCreate in ur Application
         Utils.init(mApplication);
+
     }
+
 }

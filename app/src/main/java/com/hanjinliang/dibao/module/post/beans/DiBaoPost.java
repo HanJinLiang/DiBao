@@ -1,8 +1,7 @@
-package com.hanjinliang.dibao.module.picture.beans;
+package com.hanjinliang.dibao.module.post.beans;
 
 import com.hanjinliang.dibao.module.base.BaseBeans;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.BmobUser;

@@ -1,7 +1,9 @@
 package com.hanjinliang.dibao.module.base;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v7.widget.Toolbar;
@@ -80,6 +82,43 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+    AlertDialog dialog;
+    public void showDialog(){
+        if(dialog==null) {
+            dialog = new AlertDialog.Builder(this).create();
+            dialog.setMessage("操作中");
+        }
+        dialog.show();
+    }
+
+    public void dismissDialog(){
+        if(dialog!=null&&dialog.isShowing()){
+            dialog.dismiss();
+        }
+    }
+
+
+    ProgressDialog mProgressDialog;
+    public void showProgressDialog(){
+        if(mProgressDialog==null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setTitle("发布中");
+            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);// 设置水平进度条
+            mProgressDialog.setMax(100);
+            mProgressDialog.setCancelable(false);
+        }
+        mProgressDialog.show();
+    }
+
+    public void updateProgressDialog(int progress){
+        if(mProgressDialog!=null) {
+            mProgressDialog.setProgress(progress);
+            if(progress==mProgressDialog.getMax()){
+                mProgressDialog.dismiss();
+            }
+        }
+    }
+
 
     public boolean isSupportToolBar(){
         return true;

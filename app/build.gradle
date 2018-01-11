@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.hanjinliang.dibao"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -20,7 +20,6 @@ android {
     packagingOptions {
         exclude 'META-INF/rxjava.properties'  //这里找到你自己错的那行，把Duplicate files copied in APK后面的复制上来
     }
-
 
 }
 
@@ -60,5 +59,8 @@ dependencies {
 
     //https://github.com/LuckSiege/PictureSelector
     implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.1.7'
+
+    //https://github.com/lipangit/JiaoZiVideoPlayer
+    implementation 'cn.jzvd:jiaozivideoplayer:6.2.3'
 
 }
