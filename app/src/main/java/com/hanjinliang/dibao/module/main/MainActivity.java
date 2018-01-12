@@ -23,6 +23,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.ScreenUtils;
@@ -38,6 +39,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.bmob.v3.BmobUser;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -70,17 +72,11 @@ public class MainActivity extends AppCompatActivity
 
 
         navigationView.setNavigationItemSelectedListener(this);
-
-        for (int i = 0; i < mFragmentTitleList.size(); i++) {
-            if(i==0){
-                mFragmentArrayList.add(PostFragment.newInstance(AddPicActivity.TYPE_PIC));
-            }else if(i==1){
-                mFragmentArrayList.add(PostFragment.newInstance(AddPicActivity.TYPE_VIDEO));
-            }else{
-                mFragmentArrayList.add(BaseListFragment.newInstance(i + 1));
-            }
-
-        }
+        initNavigationView();
+        mFragmentArrayList.add(PostFragment.newInstance(AddPicActivity.TYPE_PIC));
+        mFragmentArrayList.add(PostFragment.newInstance(AddPicActivity.TYPE_VIDEO));
+        mFragmentArrayList.add(PostFragment.newInstance(AddPicActivity.TYPE_PIC));
+        mFragmentArrayList.add(PostFragment.newInstance(AddPicActivity.TYPE_VIDEO));
 
         mainViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
@@ -100,6 +96,18 @@ public class MainActivity extends AppCompatActivity
         });
 
         tabLayout.setupWithViewPager(mainViewPager);
+    }
+
+    /**
+     * 初始化侧滑栏
+     */
+    private void initNavigationView() {
+        TextView userName=navigationView.findViewById(R.id.userName);
+        TextView userPhone=navigationView.findViewById(R.id.userPhone);
+        if(BmobUser.getCurrentUser()!=null){
+            userName.setText(BmobUser.getCurrentUser().getUsername());
+            userPhone.setText(BmobUser.getCurrentUser().getMobilePhoneNumber());
+        }
     }
 
     @OnClick({R.id.fab})

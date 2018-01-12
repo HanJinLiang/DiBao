@@ -58,6 +58,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         });
     }
 
+    public  void setTitle(String title){
+        baseToolbar.setTitle(title);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

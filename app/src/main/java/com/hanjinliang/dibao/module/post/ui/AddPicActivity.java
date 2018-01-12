@@ -226,7 +226,6 @@ public class AddPicActivity extends BaseActivity {
         PictureSelector.create(AddPicActivity.this)
                 .openGallery(mimeType)//全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
                 .theme(R.style.picture_white_style)
-                .compress(true)
                 .videoQuality(0)// 视频录制质量 0 or 1
                 .selectionMedia(selectList)// 是否传入已选图片
                 .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code

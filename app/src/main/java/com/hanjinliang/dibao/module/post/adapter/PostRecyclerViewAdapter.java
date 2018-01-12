@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.blankj.utilcode.util.LogUtils;
 import com.hanjinliang.dibao.R;
 import com.hanjinliang.dibao.module.post.beans.DiBaoFile;
 import com.hanjinliang.dibao.module.post.beans.DiBaoPost;
@@ -40,6 +42,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.picRecyclerView.setLayoutManager(new GridLayoutManager(mContext,getColumnsCount(mDiBaoPosts.get(position).getDiBaoFiles())));
+        LogUtils.e(mPostType);
         if(mPostType.equals(AddPicActivity.TYPE_PIC)){
             holder.picRecyclerView.setAdapter(new PostPicAdapter(mDiBaoPosts.get(position).getDiBaoFiles()));
         }else{
