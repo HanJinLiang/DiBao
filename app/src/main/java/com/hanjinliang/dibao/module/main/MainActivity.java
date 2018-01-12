@@ -102,8 +102,10 @@ public class MainActivity extends AppCompatActivity
      * 初始化侧滑栏
      */
     private void initNavigationView() {
-        TextView userName=navigationView.findViewById(R.id.userName);
-        TextView userPhone=navigationView.findViewById(R.id.userPhone);
+        View headerLayout =
+                navigationView.inflateHeaderView(R.layout.nav_header_main);
+        TextView userName= headerLayout.findViewById(R.id.nav_userName);
+        TextView userPhone=headerLayout.findViewById(R.id.nav_userPhone);
         if(BmobUser.getCurrentUser()!=null){
             userName.setText(BmobUser.getCurrentUser().getUsername());
             userPhone.setText(BmobUser.getCurrentUser().getMobilePhoneNumber());
