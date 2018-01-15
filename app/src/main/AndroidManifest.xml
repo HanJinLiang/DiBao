@@ -49,6 +49,19 @@
         <activity android:name=".module.post.ui.AddPicActivity"/>
         <activity android:name=".module.login.RegisterActivity"/>
         <activity android:name=".module.post.ui.PicturePreviewActivity"/>
+
+
+        <!--热修复 begin-->
+        <meta-data
+            android:name="com.taobao.android.hotfix.IDSECRET"
+            android:value="24767094-1" />
+        <meta-data
+            android:name="com.taobao.android.hotfix.APPSECRET"
+            android:value="c4050dad823cfb3ad0ca74dcb0521103" />
+        <meta-data
+            android:name="com.taobao.android.hotfix.RSASECRET"
+            android:value="MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCfjUbtjW4T5ud10/sGGlH+FqMWxJOFwqbhcHDpblhFlkDKvzgpM+fvHpdB73cP7SbRIKlaps9wrTUPzFyXtotgx6QFYurif26tMlt8zB33UN+NoSj1qT03s9pu+BFiU7h/Cz5Y/A1Uauqn2pA0xEDLSVcnX7fMI1OdgZwbHKQClkKkpeEt1GuZEm7+PDXhN90W2IuYxq3D2+1TzAZFn4W2cwnSCEVYbYkkNvurGdqiGQ6CmL0SRcN+BlP4pKOae2uWpJNqJ4IgS0C1c9aET+cxe1UDYPjRkHmTVp3Elqjpeoo1hTWIhO+nBNtDO8JuWVjE7VDblP4LuunAgkspTHUvAgMBAAECggEAXDozBMAbID/6DZ8yXG28dY6qSU/qIojJJEl1y0lwlxDqdQghs5eAezWIo6GDhl5EcOBbZL5F7NECehZcc4oeeRwN0NtEARc+Z7lTLwliTQKfpuPApHhmnZtGKZ0Vl2vjmvRp3tAb+G8xI0Pw1b+X4KqNSYJH4SWOgN5Z2UYt/BvroTm7dlqh5W8OgWaEOFzuhg/xQe6keEIiZTTOqwVD1dHgoTN5gUIix6931vcS/Hxvcw6SU1CxmkZxVFO6QUzEMN1L3uF5i71UOpcDaMS2kNE3wBFRKGsLhWIgY+I4TPAwngcsdCGTXidpOUz+OtiUgaUVdTAS0vu+P2t9xM9BoQKBgQDSvZV/R7ObrVKikv5QSIO0KRqcNckRHQ5dCJjgqvcutGuRBFKvokvCbZrAd1scr7RJ7X8XD4bXzre3qBN9VpZ7SziVgGi1RkOqGbN4PDdE4zgmi2G96yA2eIBBZHjflI6QfHgQawug3pSaWPCXWTbA4B/lAli7daUrSPdnB/AkkQKBgQDB0VzcX7z5Fon5aIL0saNxNWIk0EF57Lhk7zMl0lBj2ohdPs37Xlo+LR4Tb+wqzwxbpzC1siyZC7Q/kUqWxDAnm8RZkpbvF1ssg4z4OOrvwGTRN8/46dtFGG8bAjb21i9+gJ6gjFwja8P95sxnnKXFOrOga9bHyTBvZsBlnJDdvwKBgETy5jCogukSQhESysX1k7GkKSKmrkw9F2/02h/Xj9vmB7OAmJUCIotQVOtXoaW3DuOJIqWm3NVKuu0JvqapZ76bE75GLvvwKz9B/Wf/O438UWi6/ZWnkfiAYGYEu09bSXGYZ6fnffx6FmCRbNX3yGQ+b/D7XZCnowyQaPF6tWUhAoGATb2bYK1qEAMxXn/EHz/tTehasGd0C+KeZ6XmPyJnqlWqYrRhTJUg31WbfbJj6RvZWh3qlMadytl9+A1f/K8+nXSGQmNg9Q/KO0Wc0qeJ3JawGZcobS/oCoPtdMjjoQhyTmxqs/z4rCB6oankjR6xAzYzfIIkyUfyjIyLWXZ+SOMCgYEAla56en5Pq9WOsUvNvBe5h3lndCzR0Ffn8nfv7wK2XY9h/Gog2iz0rmOBG4sVR7ilHNMLUQJEF23WRBXoYtfr39573vYEZLVTOhpWZjGA5u0ypt9mB3K2Y1eR5fL5xR4TifXxIgDkP7aYrB8sBHviOfKoPa1tuxg25GXLToJBdfQ=" />
+        <!--热修复 begin-->
     </application>
 
 </manifest>

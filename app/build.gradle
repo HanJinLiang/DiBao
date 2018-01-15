@@ -7,7 +7,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -62,5 +62,8 @@ dependencies {
 
     //https://github.com/lipangit/JiaoZiVideoPlayer
     implementation 'cn.jzvd:jiaozivideoplayer:6.2.3'
+
+    //阿里热修复 https://help.aliyun.com/product/51340.html?spm=5176.doc53240.3.1.twZ0Qf
+    implementation 'com.aliyun.ams:alicloud-android-hotfix:3.1.9'
 
 }

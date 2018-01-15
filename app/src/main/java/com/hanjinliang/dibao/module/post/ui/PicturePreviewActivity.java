@@ -141,6 +141,19 @@ public class PicturePreviewActivity extends BaseActivity{
                     });
 
             (container).addView(contentView, 0);
+            //单击结束页面
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+            longImg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
             return contentView;
         }
     }
