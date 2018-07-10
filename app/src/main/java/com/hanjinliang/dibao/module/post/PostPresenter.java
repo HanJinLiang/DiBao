@@ -30,12 +30,6 @@ public class PostPresenter implements IPost.Presenter {
     }
 
     @Override
-    public void doShowNetError() {
-        view.onHideLoading();
-        view.onShowNetError();
-    }
-
-    @Override
     public void doLoadData() {
         LogUtils.e(TAG,mPostType);
         DiBaoPostModel.loadPost(10, 1, mPostType, new DiBaoPostModel.ModelLoadCallback() {

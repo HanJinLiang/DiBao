@@ -65,15 +65,6 @@ public class AddPicActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
-    @Override
-    public int getContentViewId() {
-        return R.layout.activity_pic_add;
-    }
-
-    @Override
-    public String getTitleContent() {
-        return "添加";
-    }
 
     @Override
     public boolean isSupportRightMenu() {
@@ -170,42 +161,8 @@ public class AddPicActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         mType=getIntent().getStringExtra("TYPE");
         select();
-        initView();
     }
 
-    private void initView() {
-        FullyGridLayoutManager manager = new FullyGridLayoutManager(AddPicActivity.this, 4, GridLayoutManager.VERTICAL, false);
-        mRecyclerView.setLayoutManager(manager);
-        adapter = new GridImageAdapter(AddPicActivity.this, onAddPicClickListener);
-        adapter.setList(selectList);
-        adapter.setSelectMax(maxSelectNum);
-        mRecyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new GridImageAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position, View v) {
-                if (selectList.size() > 0) {
-                    LocalMedia media = selectList.get(position);
-                    String pictureType = media.getPictureType();
-                    int mediaType = PictureMimeType.pictureToVideo(pictureType);
-                    switch (mediaType) {
-                        case 1:
-                            // 预览图片 可自定长按保存路径
-                            //PictureSelector.create(MainActivity.this).externalPicturePreview(position, "/custom_file", selectList);
-                            PictureSelector.create(AddPicActivity.this).externalPicturePreview(position, selectList);
-                            break;
-                        case 2:
-                            // 预览视频
-                            PictureSelector.create(AddPicActivity.this).externalPictureVideo(media.getPath());
-                            break;
-                        case 3:
-                            // 预览音频
-                            PictureSelector.create(AddPicActivity.this).externalPictureAudio(media.getPath());
-                            break;
-                    }
-                }
-            }
-        });
-    }
 
     private GridImageAdapter.onAddPicClickListener onAddPicClickListener = new GridImageAdapter.onAddPicClickListener() {
         @Override
@@ -252,5 +209,55 @@ public class AddPicActivity extends BaseActivity {
                     break;
             }
         }
+    }
+
+    @Override
+    public int attachContentView() {
+        return R.layout.activity_pic_add;
+    }
+
+    @Override
+    public void initView(View view) {
+        FullyGridLayoutManager manager = new FullyGridLayoutManager(AddPicActivity.this, 4, GridLayoutManager.VERTICAL, false);
+        mRecyclerView.setLayoutManager(manager);
+        adapter = new GridImageAdapter(AddPicActivity.this, onAddPicClickListener);
+        adapter.setList(selectList);
+        adapter.setSelectMax(maxSelectNum);
+        mRecyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(new GridImageAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position, View v) {
+                if (selectList.size() > 0) {
+                    LocalMedia media = selectList.get(position);
+                    String pictureType = media.getPictureType();
+                    int mediaType = PictureMimeType.pictureToVideo(pictureType);
+                    switch (mediaType) {
+                        case 1:
+                            // 预览图片 可自定长按保存路径
+                            //PictureSelector.create(MainActivity.this).externalPicturePreview(position, "/custom_file", selectList);
+                            PictureSelector.create(AddPicActivity.this).externalPicturePreview(position, selectList);
+                            break;
+                        case 2:
+                            // 预览视频
+                            PictureSelector.create(AddPicActivity.this).externalPictureVideo(media.getPath());
+                            break;
+                        case 3:
+                            // 预览音频
+                            PictureSelector.create(AddPicActivity.this).externalPictureAudio(media.getPath());
+                            break;
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    public String setTitle() {
+        return "添加";
+    }
+
+    @Override
+    public Object setPresenter() {
+        return null;
     }
 }

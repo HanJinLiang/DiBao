@@ -26,12 +26,13 @@ public abstract class BaseListFragment<T extends IBasePresenter> extends LazyLoa
     public static final String TAG = "BaseListFragment";
 
     @Override
-    protected int attachLayoutId() {
+    public int attachContentView() {
         return R.layout.fragment_list;
     }
 
+
     @Override
-    protected void initView(View view) {
+    public void initView(View view) {
         mSmartRefreshLayout.setOnRefreshLoadmoreListener(this);
         mMultipleStatusView.setOnRetryClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +85,7 @@ public abstract class BaseListFragment<T extends IBasePresenter> extends LazyLoa
     public void onLoadmore(RefreshLayout refreshlayout) {
 
     }
+
 
     @Override
     public void onHideLoadingMore() {

@@ -57,19 +57,18 @@ public class PicturePreviewActivity extends BaseActivity{
         intent.putStringArrayListExtra(PIC_PATHS,imagePaths);
         context.startActivity(intent);
     }
-
     @Override
-    public int getContentViewId() {
+    public int attachContentView() {
         return R.layout.activity_picture_preview;
     }
 
     @Override
-    public String getTitleContent() {
-        return "";
+    public boolean isSwipeBack() {
+        return false;
     }
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void initView(View view) {
         position = getIntent().getIntExtra(PIC_POSITION, 0);
         mImagePaths = getIntent().getStringArrayListExtra(PIC_PATHS);
         setTitle(position + 1 + "/" + mImagePaths.size());
@@ -93,6 +92,17 @@ public class PicturePreviewActivity extends BaseActivity{
         viewPager.setCurrentItem(position,true);
     }
 
+    @Override
+    public String setTitle() {
+        return "";
+    }
+
+
+
+    @Override
+    public Object setPresenter() {
+        return null;
+    }
 
     public class SimpleFragmentAdapter extends PagerAdapter {
 

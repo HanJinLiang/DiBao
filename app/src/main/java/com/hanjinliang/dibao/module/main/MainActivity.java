@@ -1,5 +1,7 @@
 package com.hanjinliang.dibao.module.main;
 
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,6 +11,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
@@ -25,10 +28,13 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.BarUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.hanjinliang.dibao.R;
 import com.hanjinliang.dibao.module.base.BaseListFragment;
+import com.hanjinliang.dibao.module.memoire.MemoireBuildActivity;
 import com.hanjinliang.dibao.module.post.ui.AddPicActivity;
 import com.hanjinliang.dibao.module.post.ui.PostFragment;
 
@@ -43,7 +49,9 @@ import cn.bmob.v3.BmobUser;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    @BindView(R.id.toolbar)
+    @BindView(R.id.fake_status_bar)
+    View fake_status_bar;
+    @BindView(R.id.main_toolbar)
     Toolbar toolbar;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
@@ -61,10 +69,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //设置为竖屏
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
-        setSupportActionBar(toolbar);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -96,6 +106,8 @@ public class MainActivity extends AppCompatActivity
         });
 
         tabLayout.setupWithViewPager(mainViewPager);
+        BarUtils.setStatusBarColor4Drawer(this,drawer,fake_status_bar, ContextCompat.getColor(this,R.color.colorAccent),100,false);
+        BarUtils.addMarginTopEqualStatusBarHeight(toolbar);//
     }
 
     /**
@@ -145,6 +157,7 @@ public class MainActivity extends AppCompatActivity
         AddClickListener addClickListener = new AddClickListener();
         contentView.findViewById(R.id.main_add_pic).setOnClickListener(addClickListener);
         contentView.findViewById(R.id.main_add_video).setOnClickListener(addClickListener);
+        contentView.findViewById(R.id.main_add_memoire).setOnClickListener(addClickListener);
     }
 
     class AddClickListener implements View.OnClickListener {
@@ -157,6 +170,9 @@ public class MainActivity extends AppCompatActivity
                     break;
                 case R.id.main_add_video://选择视频
                     AddPicActivity.launchActivity(MainActivity.this,AddPicActivity.TYPE_VIDEO);
+                    break;
+                case R.id.main_add_memoire://新增备忘录
+                    startActivity(new Intent(MainActivity.this, MemoireBuildActivity.class));
                     break;
             }
             mBottomSheetDialog.dismiss();

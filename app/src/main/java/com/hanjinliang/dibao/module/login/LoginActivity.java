@@ -6,36 +6,28 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.ImageUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.RegexUtils;
+import com.blankj.utilcode.util.SnackbarUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.hanjinliang.dibao.module.main.MainActivity;
 import com.hanjinliang.dibao.R;
 import com.hanjinliang.dibao.module.base.BaseActivity;
 
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.LogInListener;
-import cn.bmob.v3.listener.SaveListener;
+
 
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity<ILogin.Presenter> implements ILogin.View {
     @BindView(R.id.login_root)
     RelativeLayout login_root;
     @BindView(R.id.phone)
@@ -43,22 +35,27 @@ public class LoginActivity extends BaseActivity {
     @BindView(R.id.password)
     EditText et_password;
 
-    // UI references.
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
+    @Override
+    public boolean isSwipeBack() {
+        return false;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public boolean isSupportToolBar() {
+        return false;
+    }
+
+    @Override
+    public int attachContentView() {
+        return R.layout.activity_login;
+    }
+
+    @Override
+    public void initView(View view) {
         //设置导航栏透明
         BarUtils.setStatusBarAlpha(this,0);
-
         //设置模糊背景
         login_root.setBackgroundDrawable(ImageUtils.bitmap2Drawable(ImageUtils.stackBlur(ImageUtils.getBitmap(R.drawable.login_bg),20)));
-        if(BmobUser.getCurrentUser()!=null){
-            launchToMain();
-        }
-
         et_password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -71,24 +68,14 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-    private void launchToMain(){
-        startActivity(new Intent(this,MainActivity.class));
-        finish();
-    }
-
     @Override
-    public boolean isSupportToolBar() {
-        return false;
-    }
-
-    @Override
-    public int getContentViewId() {
-        return R.layout.activity_login;
-    }
-
-    @Override
-    public String getTitleContent() {
+    public String setTitle() {
         return null;
+    }
+
+    @Override
+    public ILogin.Presenter setPresenter() {
+        return new LoginPresenter(this);
     }
 
     @OnClick({R.id.btn_login,R.id.register})
@@ -105,52 +92,39 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void login() {
-
         String phone=et_phone.getText().toString().trim();
         final String password=et_password.getText().toString().trim();
         if(!RegexUtils.isMobileSimple(phone)){
             ToastUtils.showShort("手机号格式不对");
             return;
         }
-
         if(TextUtils.isEmpty(password)){
             ToastUtils.showShort("密码不能为空");
             return;
         }
-
-        BmobQuery<BmobUser> query=new BmobQuery<>();
-        query.addWhereEqualTo("mobilePhoneNumber",phone);
-        query.addWhereEqualTo("password",password);
-        query.findObjects(new FindListener<BmobUser>() {
-            @Override
-            public void done(List<BmobUser> list, BmobException e) {
-                if(e==null){
-                    if(list!=null&&list.size()>0){
-                        BmobUser bmobUser=list.get(0);
-                        bmobUser.setPassword(password);
-                        bmobUser.login(new SaveListener<Object>() {
-                            @Override
-                            public void done(Object o, BmobException e) {
-                                if(e==null){
-                                    ToastUtils.showShort("登录成功");
-                                    launchToMain();
-                                }else{
-                                    ToastUtils.showShort(e.getMessage());
-                                    LogUtils.e();
-                                }
-                            }
-                        });
-                    }else{
-                        ToastUtils.showShort("没有找到对应用户");
-                    }
-                }else{
-                    ToastUtils.showShort(e.getMessage());
-                }
-
-            }
-        });
+        presenter.login(phone,password);
     }
 
 
+    @Override
+    public void onLogining() {
+        showDialog("登录中...");
+    }
+
+    @Override
+    public void loginSuccess() {
+        dismissDialog();
+        SnackbarUtils.with(getWindow().getDecorView()).setMessage("登录成功").show();
+        launchToMain();
+    }
+    private void launchToMain(){
+        startActivity(new Intent(LoginActivity.this,MainActivity.class));
+        finish();
+    }
+    @Override
+    public void loginFailed(String errorMessage) {
+        dismissDialog();
+        SnackbarUtils.with(getWindow().getDecorView()).setMessage(errorMessage).showError();
+    }
 }
 

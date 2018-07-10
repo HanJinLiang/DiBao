@@ -37,7 +37,7 @@ dependencies {
     //以下SDK开发者请根据需要自行选择
     //bmob-sdk：Bmob的android sdk包，包含了Bmob的数据存储、文件等服务，以下是最新的bmob-sdk:
     //3.5.5：请务必查看下面注释[1]
-    implementation ('cn.bmob.android:bmob-sdk:3.5.5'){exclude module:'rxjava'}
+    implementation('cn.bmob.android:bmob-sdk:3.5.5') { exclude module: 'rxjava' }
     //如果你想应用能够兼容Android6.0，请添加此依赖(org.apache.http.legacy.jar)
     implementation 'cn.bmob.android:http-legacy:1.0'
 
@@ -47,6 +47,9 @@ dependencies {
 
     //工具类 https://github.com/Blankj/AndroidUtilCode/blob/master/utilcode/README-CN.md
     implementation 'com.blankj:utilcode:1.10.0'
+
+    //侧滑返回  https://github.com/r0adkll/Slidr
+    implementation 'com.r0adkll:slidableactivity:2.0.5'
 
     //https://github.com/scwang90/SmartRefreshLayout
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.4-6'
@@ -64,6 +67,6 @@ dependencies {
     implementation 'cn.jzvd:jiaozivideoplayer:6.2.3'
 
     //阿里热修复 https://help.aliyun.com/product/51340.html?spm=5176.doc53240.3.1.twZ0Qf
-    implementation 'com.aliyun.ams:alicloud-android-hotfix:3.1.9'
+    //implementation 'com.aliyun.ams:alicloud-android-hotfix:3.1.9'
 
 }

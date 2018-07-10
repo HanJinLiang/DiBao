@@ -36,11 +36,18 @@ public class PostFragment extends BaseListFragment<IPost.Presenter> implements I
     }
 
     @Override
-    protected void initView(View view) {
+    public void initView(View view) {
         super.initView(view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mPostRecyclerViewAdapter=new PostRecyclerViewAdapter(getActivity(),mType,mDiBaoPosts);
         mRecyclerView.setAdapter(mPostRecyclerViewAdapter);
+    }
+
+
+
+    @Override
+    public IPost.Presenter setPresenter() {
+        return  new PostPresenter(this,mType);
     }
 
     @Override
@@ -49,15 +56,6 @@ public class PostFragment extends BaseListFragment<IPost.Presenter> implements I
         LogUtils.e("initData--"+args.getString("mType"));
         if(args!=null){
             mType=args.getString("mType");
-        }
-    }
-
-
-
-    @Override
-    public void setPresenter(IPost.Presenter presenter) {
-        if (null == presenter) {
-            this.presenter = new PostPresenter(this,mType);
         }
     }
 

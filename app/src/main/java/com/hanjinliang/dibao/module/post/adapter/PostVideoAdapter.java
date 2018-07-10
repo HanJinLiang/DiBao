@@ -12,6 +12,7 @@ import com.hanjinliang.dibao.module.post.beans.DiBaoFile;
 
 import java.util.List;
 
+import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.JZVideoPlayerStandard;
 
 /**
@@ -34,6 +35,7 @@ public class PostVideoAdapter extends RecyclerView.Adapter<PostVideoAdapter.MyVi
     public void onBindViewHolder(PostVideoAdapter.MyViewHolder holder, int position) {
         holder.mJZVideoPlayerStandard.setUp( mFiles.get(position).getFile().getUrl()
                 , JZVideoPlayerStandard.SCREEN_WINDOW_LIST, mFiles.get(position).getFileDescribe());
+        holder.mJZVideoPlayerStandard.setVideoImageDisplayType(JZVideoPlayer.VIDEO_IMAGE_DISPLAY_TYPE_FILL_SCROP);//设置容器内播放器高
         MyImageLoader.getInstance().showImage(holder.mJZVideoPlayerStandard.getContext(),mFiles.get(position).getFile().getUrl(),holder.mJZVideoPlayerStandard.thumbImageView);
     }
 

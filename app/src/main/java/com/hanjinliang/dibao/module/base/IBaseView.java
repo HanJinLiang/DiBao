@@ -1,30 +1,33 @@
 package com.hanjinliang.dibao.module.base;
 
 
+import android.view.View;
+
 /**
  * Created by Meiji on 2017/5/7.
  */
-
 public interface IBaseView<T> {
+    /**
+     * 关联布局
+     * @return
+     */
+    int attachContentView();
 
     /**
-     * 显示加载动画
+     * 初始化布局
+     * @param view
      */
-    void onShowLoading();
+    void initView(View view);
 
     /**
-     * 隐藏加载
+     * 设置标题
+     * @return
      */
-    void onHideLoading();
-
-    /**
-     * 显示网络错误
-     */
-    void onShowNetError();
+    String setTitle();
 
     /**
      * 设置 presenter
      */
-    void setPresenter(T presenter);
+    T setPresenter();
 
 }

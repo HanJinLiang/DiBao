@@ -13,10 +13,12 @@ import com.hanjinliang.dibao.R;
  */
 
 public class MyImageLoader implements ImageLoader {
-    private static MyImageLoader mMyImageLoader;
+    private static volatile MyImageLoader mMyImageLoader;
     public static MyImageLoader getInstance(){
         if(mMyImageLoader==null){
-            mMyImageLoader=new MyImageLoader();
+            synchronized (MyImageLoader.class) {
+                mMyImageLoader = new MyImageLoader();
+            }
         }
         return mMyImageLoader;
     }

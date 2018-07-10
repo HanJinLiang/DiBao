@@ -23,10 +23,6 @@ public interface IBaseListView<T> extends IBaseView<T> {
      */
     void onShowNetError();
 
-    /**
-     * 设置 presenter
-     */
-    void setPresenter(T presenter);
 
     /**
      * 设置适配器

@@ -1,8 +1,10 @@
 package com.hanjinliang.dibao.module.base;
 
 import android.app.ProgressDialog;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
@@ -13,7 +15,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.blankj.utilcode.util.BarUtils;
 import com.hanjinliang.dibao.R;
+import com.r0adkll.slidr.Slidr;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,18 +25,26 @@ import butterknife.ButterKnife;
 /**
  * Created by HanJinLiang on 2018-01-04.
  */
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity<T extends IBasePresenter> extends AppCompatActivity implements IBaseView<T> {
     @BindView(R.id.baseToolbar)
     Toolbar baseToolbar;
-
+    protected T presenter;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        //设置为竖屏
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
+        if(isSwipeBack()) {
+            Slidr.attach(this);
+        }
         //设置布局
         LinearLayout rootView= (LinearLayout) LayoutInflater.from(this).inflate(R.layout.activity_base,null);
-        rootView.addView(LayoutInflater.from(this).inflate(getContentViewId(),null),new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+        rootView.addView(LayoutInflater.from(this).inflate(attachContentView(),null),new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
         setContentView(rootView);
         ButterKnife.bind(this);
+
+        presenter=setPresenter();
+
         //initToolBar
         if(isSupportToolBar()){
             initToolBar();
@@ -40,14 +52,16 @@ public abstract class BaseActivity extends AppCompatActivity {
             setSupportActionBar(null);
             baseToolbar.setVisibility(View.GONE);
         }
-    }
+        BarUtils.setStatusBarColor(this, ContextCompat.getColor(this,R.color.colorPrimary));
+        initView(rootView);
 
+    }
 
     /**
      * 初始化 ToolBar
      */
     protected void initToolBar(){
-        baseToolbar.setTitle(getTitleContent());
+        baseToolbar.setTitle(setTitle());
         baseToolbar.setNavigationIcon(R.drawable.picture_back);
         setSupportActionBar(baseToolbar);
         baseToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -88,6 +102,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
     AlertDialog dialog;
     public void showDialog(){
+        showDialog("操作中");
+    }
+
+    public void showDialog(String message){
         if(dialog==null) {
             dialog = new AlertDialog.Builder(this).create();
             dialog.setMessage("操作中");
@@ -130,8 +148,15 @@ public abstract class BaseActivity extends AppCompatActivity {
     public boolean isSupportRightMenu(){
         return false;
     }
+
+    /**
+     * 是否侧滑返回
+     * @return
+     */
+    public boolean isSwipeBack(){
+        return true;
+    }
     public String getRightMenuText(){return "完成";};
     public void onRightMenuDone(){};
-    public abstract int getContentViewId();
-    public abstract String getTitleContent();
+
 }

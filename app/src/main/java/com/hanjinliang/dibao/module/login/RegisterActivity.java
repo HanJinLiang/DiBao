@@ -43,26 +43,6 @@ public class RegisterActivity extends BaseActivity {
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //设置导航栏透明
-        BarUtils.setStatusBarAlpha(this,0);
-
-        //设置模糊背景
-        login_root.setBackgroundDrawable(ImageUtils.bitmap2Drawable(ImageUtils.stackBlur(ImageUtils.getBitmap(R.drawable.login_bg),20)));
-
-        et_password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId== EditorInfo.IME_ACTION_DONE){
-                    register();
-                    return true;
-                }
-                return false;
-            }
-        });
-    }
 
     private void launchToMain(){
         startActivity(new Intent(this,MainActivity.class));
@@ -74,15 +54,6 @@ public class RegisterActivity extends BaseActivity {
         return false;
     }
 
-    @Override
-    public int getContentViewId() {
-        return R.layout.activity_login;
-    }
-
-    @Override
-    public String getTitleContent() {
-        return null;
-    }
 
     @OnClick(R.id.btn_register)
     public void onClick(View view){
@@ -124,5 +95,38 @@ public class RegisterActivity extends BaseActivity {
     }
 
 
+    @Override
+    public int attachContentView() {
+        return  R.layout.activity_login;
+    }
+
+    @Override
+    public void initView(View view) {
+        //设置导航栏透明
+        BarUtils.setStatusBarAlpha(this,0);
+
+        //设置模糊背景
+        login_root.setBackgroundDrawable(ImageUtils.bitmap2Drawable(ImageUtils.stackBlur(ImageUtils.getBitmap(R.drawable.login_bg),20)));
+        et_password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId== EditorInfo.IME_ACTION_DONE){
+                    register();
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    @Override
+    public String setTitle() {
+        return null;
+    }
+
+    @Override
+    public Object setPresenter() {
+        return null;
+    }
 }
 
