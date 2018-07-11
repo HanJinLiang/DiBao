@@ -1,4 +1,4 @@
-package com.hanjinliang.dibao.MyImageLoader;
+package com.hanjinliang.dibao.tools.image;
 
 import android.content.Context;
 import android.widget.ImageView;

@@ -18,6 +18,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guideLine"
         app:layout_constraintDimensionRatio="h,9:16"
-        app:layout_constraintVertical_weight="0.2">
+      >
     </cn.jzvd.JZVideoPlayerStandard>
 </android.support.constraint.ConstraintLayout>

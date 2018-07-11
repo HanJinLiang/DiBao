@@ -4,23 +4,37 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PointF;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 
+import com.blankj.utilcode.util.FileUtils;
+import com.blankj.utilcode.util.ImageUtils;
+import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.TimeUtils;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.hanjinliang.dibao.R;
 import com.hanjinliang.dibao.module.base.BaseActivity;
 
+import com.hanjinliang.dibao.tools.share.ShareToolUtil;
+import com.hanjinliang.dibao.tools.share.ShareUtil;
 import com.luck.picture.lib.photoview.PhotoView;
 
 import com.luck.picture.lib.widget.PreviewViewPager;
@@ -28,6 +42,7 @@ import com.luck.picture.lib.widget.longimage.ImageSource;
 import com.luck.picture.lib.widget.longimage.ImageViewState;
 import com.luck.picture.lib.widget.longimage.SubsamplingScaleImageView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,7 +112,50 @@ public class PicturePreviewActivity extends BaseActivity{
         return "";
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_share, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        saveFile(item.getItemId());
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * 先保存到本地  然后再分享
+     * @param menuItemId
+     */
+    private void saveFile(final int menuItemId) {
+        LogUtils.e("saveFile", TimeUtils.getNowString());
+        Glide.with(PicturePreviewActivity.this)
+                .asBitmap()
+                .load(mImagePaths.get(viewPager.getCurrentItem()))
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        LogUtils.e("saveSharePic1", TimeUtils.getNowString());
+                        File file=ShareToolUtil.saveSharePic(PicturePreviewActivity.this,resource);
+                        LogUtils.e("saveSharePic2", TimeUtils.getNowString());
+                        if(file!=null){
+                            switch (menuItemId){
+                                case R.id.action_share_qq:
+                                    ShareUtil.shareImageToQQ(PicturePreviewActivity.this,resource);
+                                    break;
+                                case R.id.action_share_wechat:
+                                    ShareUtil.shareWechatFriend(PicturePreviewActivity.this,file);
+                                    break;
+                                case R.id.action_share_wechat_group:
+                                    ShareUtil.shareWechatMoment(PicturePreviewActivity.this,"来自笛宝的分享",file);
+                                    break;
+                            }
+                        }
+                    }
+                });
+
+    }
 
     @Override
     public Object setPresenter() {
@@ -128,6 +186,7 @@ public class PicturePreviewActivity extends BaseActivity{
             final PhotoView imageView = (PhotoView) contentView.findViewById(R.id.preview_image);
             // 长图控件
             final SubsamplingScaleImageView longImg = (SubsamplingScaleImageView) contentView.findViewById(R.id.longImg);
+            final ProgressBar progressBar=contentView.findViewById(R.id.progressBar);
             final String path = mImagePaths.get(position);
             RequestOptions options = new RequestOptions()
                     .diskCacheStrategy(DiskCacheStrategy.ALL);
@@ -138,6 +197,7 @@ public class PicturePreviewActivity extends BaseActivity{
                     .into(new SimpleTarget<Bitmap>(480, 800) {
                         @Override
                         public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            progressBar.setVisibility(View.GONE);
                             if (isLongImg(resource)) {
                                 imageView.setVisibility(View.GONE);
                                 longImg.setVisibility(View.VISIBLE);
@@ -148,6 +208,19 @@ public class PicturePreviewActivity extends BaseActivity{
                                 imageView.setImageBitmap(resource);
                             }
                         }
+
+                        @Override
+                        public void onLoadStarted(@Nullable Drawable placeholder) {
+                            super.onLoadStarted(placeholder);
+                            progressBar.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                            super.onLoadFailed(errorDrawable);
+                            progressBar.setVisibility(View.GONE);
+                        }
+
                     });
 
             (container).addView(contentView, 0);

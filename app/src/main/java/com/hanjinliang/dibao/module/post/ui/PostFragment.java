@@ -24,14 +24,10 @@ import java.util.List;
  */
 
 public class PostFragment extends BaseListFragment<IPost.Presenter> implements IPost.View {
-    private String mType;
     PostRecyclerViewAdapter mPostRecyclerViewAdapter;
     ArrayList<DiBaoPost> mDiBaoPosts=new ArrayList<>();
-    public static PostFragment newInstance(String mType) {
+    public static PostFragment newInstance() {
         PostFragment fragment = new PostFragment();
-        Bundle args = new Bundle();
-        args.putString("mType",mType);
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -39,7 +35,7 @@ public class PostFragment extends BaseListFragment<IPost.Presenter> implements I
     public void initView(View view) {
         super.initView(view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mPostRecyclerViewAdapter=new PostRecyclerViewAdapter(getActivity(),mType,mDiBaoPosts);
+        mPostRecyclerViewAdapter=new PostRecyclerViewAdapter(getActivity(),mDiBaoPosts);
         mRecyclerView.setAdapter(mPostRecyclerViewAdapter);
     }
 
@@ -47,16 +43,12 @@ public class PostFragment extends BaseListFragment<IPost.Presenter> implements I
 
     @Override
     public IPost.Presenter setPresenter() {
-        return  new PostPresenter(this,mType);
+        return  new PostPresenter(this);
     }
 
     @Override
     protected void initData()  {
-        Bundle args=getArguments();
-        LogUtils.e("initData--"+args.getString("mType"));
-        if(args!=null){
-            mType=args.getString("mType");
-        }
+
     }
 
     @Override

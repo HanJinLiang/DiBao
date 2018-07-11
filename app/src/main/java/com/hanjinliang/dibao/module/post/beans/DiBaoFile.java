@@ -2,6 +2,7 @@ package com.hanjinliang.dibao.module.post.beans;
 
 import com.hanjinliang.dibao.module.base.BaseBeans;
 
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 
 /**
@@ -13,7 +14,6 @@ public class DiBaoFile extends BaseBeans {
     BmobFile file;//文件
     String fileType;//文件类型 TYPE_PIC 照片 TYPE_VIDEO 视屏
     DiBaoPost post;//关联的post
-
     public DiBaoFile(String fileDescribe, BmobFile file, String fileType) {
         this.fileDescribe = fileDescribe;
         this.file = file;

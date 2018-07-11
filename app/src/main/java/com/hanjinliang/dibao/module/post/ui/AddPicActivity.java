@@ -15,6 +15,7 @@ import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.hanjinliang.dibao.R;
 import com.hanjinliang.dibao.module.base.BaseActivity;
+import com.hanjinliang.dibao.module.post.PostType;
 import com.hanjinliang.dibao.module.post.adapter.FullyGridLayoutManager;
 import com.hanjinliang.dibao.module.post.adapter.GridImageAdapter;
 import com.hanjinliang.dibao.module.post.beans.DiBaoFile;
@@ -50,18 +51,12 @@ public class AddPicActivity extends BaseActivity {
     @BindView(R.id.et_content)
     EditText et_content;
 
-    public static final String TYPE_PIC="TYPE_PIC";
-    public static final String TYPE_VIDEO="TYPE_VIDEO";
-
-    private String mType=TYPE_PIC;//类型  默认为照片
-
     private GridImageAdapter adapter;
-
+    String mPostType;
     private int maxSelectNum = 9;
     private List<LocalMedia> selectList = new ArrayList<>();
-    public static void launchActivity(Context context, String TYPE){
+    public static void launchActivity(Context context ){
         Intent intent=new Intent(context,AddPicActivity.class);
-        intent.putExtra("TYPE",TYPE);
         context.startActivity(intent);
     }
 
@@ -73,7 +68,7 @@ public class AddPicActivity extends BaseActivity {
 
     @Override
     public void onRightMenuDone() {
-        final DiBaoPost diBaoPost=new DiBaoPost(et_content.getText().toString(),mType, BmobUser.getCurrentUser());
+        final DiBaoPost diBaoPost=new DiBaoPost(et_content.getText().toString(),mPostType, BmobUser.getCurrentUser());
         diBaoPost.save(new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {
@@ -100,7 +95,7 @@ public class AddPicActivity extends BaseActivity {
                    LogUtils.e("文件上传成功");
                     final List<BmobObject> files=new ArrayList<>();
                     for(int i=0;i<list.size();i++){
-                        final DiBaoFile diBaoFile=new DiBaoFile("",list.get(i),mType);
+                        final DiBaoFile diBaoFile=new DiBaoFile("",list.get(i),mPostType);
                         diBaoFile.setPost(diBaoPost);
                         files.add(diBaoFile);
                     }
@@ -159,7 +154,6 @@ public class AddPicActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mType=getIntent().getStringExtra("TYPE");
         select();
     }
 
@@ -174,16 +168,9 @@ public class AddPicActivity extends BaseActivity {
 
 
     private void select() {
-        int mimeType=PictureMimeType.ofImage();
-        if(mType.equals(TYPE_PIC)){
-            mimeType=PictureMimeType.ofImage();
-        }else if(mType.equals(TYPE_VIDEO)){
-            mimeType=PictureMimeType.ofVideo();
-        }
         PictureSelector.create(AddPicActivity.this)
-                .openGallery(mimeType)//全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
+                .openGallery(PictureMimeType.ofAll())//全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
                 .theme(R.style.picture_white_style)
-                .videoQuality(0)// 视频录制质量 0 or 1
                 .selectionMedia(selectList)// 是否传入已选图片
                 .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
     }
@@ -204,6 +191,10 @@ public class AddPicActivity extends BaseActivity {
                     for (LocalMedia media : selectList) {
                         Log.i("图片-----》", media.getPath());
                     }
+                    if(selectList!=null&&selectList.size()>0){
+                        mPostType=(selectList.get(0).getPictureType().startsWith("image"))?PostType.IMAGE:PostType.VIDEO;
+                    }
+
                     adapter.setList(selectList);
                     adapter.notifyDataSetChanged();
                     break;

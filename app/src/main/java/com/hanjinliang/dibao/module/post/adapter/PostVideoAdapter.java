@@ -5,8 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
-import com.hanjinliang.dibao.MyImageLoader.MyImageLoader;
+import com.hanjinliang.dibao.tools.image.MyImageLoader;
 import com.hanjinliang.dibao.R;
 import com.hanjinliang.dibao.module.post.beans.DiBaoFile;
 

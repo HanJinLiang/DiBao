@@ -37,6 +37,8 @@ import com.hanjinliang.dibao.module.base.BaseListFragment;
 import com.hanjinliang.dibao.module.memoire.MemoireBuildActivity;
 import com.hanjinliang.dibao.module.post.ui.AddPicActivity;
 import com.hanjinliang.dibao.module.post.ui.PostFragment;
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.config.PictureMimeType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,7 +67,7 @@ public class MainActivity extends AppCompatActivity
     ViewPager mainViewPager;
 
     ArrayList<Fragment> mFragmentArrayList = new ArrayList<>();
-    List<String> mFragmentTitleList = Arrays.asList("照片", "视频", "备忘录", "账本");
+    List<String> mFragmentTitleList = Arrays.asList("圈子", "记事本");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,10 +85,8 @@ public class MainActivity extends AppCompatActivity
 
         navigationView.setNavigationItemSelectedListener(this);
         initNavigationView();
-        mFragmentArrayList.add(PostFragment.newInstance(AddPicActivity.TYPE_PIC));
-        mFragmentArrayList.add(PostFragment.newInstance(AddPicActivity.TYPE_VIDEO));
-        mFragmentArrayList.add(PostFragment.newInstance(AddPicActivity.TYPE_PIC));
-        mFragmentArrayList.add(PostFragment.newInstance(AddPicActivity.TYPE_VIDEO));
+        mFragmentArrayList.add(PostFragment.newInstance());
+        mFragmentArrayList.add(PostFragment.newInstance());
 
         mainViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
@@ -155,8 +155,8 @@ public class MainActivity extends AppCompatActivity
             }
         });
         AddClickListener addClickListener = new AddClickListener();
-        contentView.findViewById(R.id.main_add_pic).setOnClickListener(addClickListener);
-        contentView.findViewById(R.id.main_add_video).setOnClickListener(addClickListener);
+        contentView.findViewById(R.id.main_add_camera).setOnClickListener(addClickListener);
+        contentView.findViewById(R.id.main_add_pick).setOnClickListener(addClickListener);
         contentView.findViewById(R.id.main_add_memoire).setOnClickListener(addClickListener);
     }
 
@@ -165,11 +165,11 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.main_add_pic://选择照片
-                    AddPicActivity.launchActivity(MainActivity.this,AddPicActivity.TYPE_PIC);
+                case R.id.main_add_camera://选择照片
+                    PictureSelector.create(MainActivity.this).openCamera(PictureMimeType.ofImage()).forResult(0);
                     break;
-                case R.id.main_add_video://选择视频
-                    AddPicActivity.launchActivity(MainActivity.this,AddPicActivity.TYPE_VIDEO);
+                case R.id.main_add_pick://选择视频
+                    AddPicActivity.launchActivity(MainActivity.this);
                     break;
                 case R.id.main_add_memoire://新增备忘录
                     startActivity(new Intent(MainActivity.this, MemoireBuildActivity.class));

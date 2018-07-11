@@ -16,12 +16,10 @@ public class PostPresenter implements IPost.Presenter {
 
     private static final String TAG = "PostPresenter";
     private IPost.View view;
-    private String mPostType;
     private int mPageIndex=1;
     private List<DiBaoPost> mDiBaoPosts=new ArrayList<>();
-    public PostPresenter(IPost.View view,String postType) {
+    public PostPresenter(IPost.View view) {
         this.view = view;
-        mPostType=postType;
     }
 
     @Override
@@ -31,8 +29,7 @@ public class PostPresenter implements IPost.Presenter {
 
     @Override
     public void doLoadData() {
-        LogUtils.e(TAG,mPostType);
-        DiBaoPostModel.loadPost(10, 1, mPostType, new DiBaoPostModel.ModelLoadCallback() {
+        DiBaoPostModel.loadPost(10, 1, new DiBaoPostModel.ModelLoadCallback() {
             @Override
             public void loadSuccess(List<DiBaoPost> list) {
                 if(list==null||list.size()==0){//没有更多数据
@@ -54,7 +51,7 @@ public class PostPresenter implements IPost.Presenter {
 
     @Override
     public void doLoadMoreData() {
-        DiBaoPostModel.loadPost(10, ++mPageIndex, mPostType, new DiBaoPostModel.ModelLoadCallback() {
+        DiBaoPostModel.loadPost(10, ++mPageIndex, new DiBaoPostModel.ModelLoadCallback() {
             @Override
             public void loadSuccess(List<DiBaoPost> list) {
                 if(list==null||list.size()==0){//没有更多数据
